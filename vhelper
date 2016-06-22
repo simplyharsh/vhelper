@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+#
+# vhelper
+# Author: @simplyharsh
+#
+# Installation:
+#   Add this line to your .bashrc or .bash-profile:
+#
+#       if [ -f ~/.vhelper ]; then
+#	      source ~/.vhelper
+#       fi
+#
+
+vdir=~/.virtualenvs
+R='\033[0;31m'
+B='\033[0;34m'
+Y='\033[1;33m'
+NC='\033[0m'
+vhelper_echo() {
+    printf "${Y}vhelper: ${NC}$1\n"
+    echo " "
+}
+
+vhelper_create() {
+    last_dir="${PWD}"
+    if [ "$#" -eq 1 ]; then
+	      this_name="$1"
+    else
+        this_name="${PWD##*/}"
+    fi
+
+    vdirpath="$vdir/$this_name"
+    success_msg="${B}Success. virtualenv '$this_name' created and activated for you. Happy Coding.${NC}"
+    if [ ! -e $vdir ]; then
+    	  mkdir $vdir
+    	  cd $vdir
+    	  virtualenv $this_name
+        cd $last_dir
+        source $vdirpath/bin/activate
+        vhelper_echo "$success_msg"
+    elif [ ! -d $vdir ]; then
+    	  vhelper_echo "${R}Failed. $vdir already exists but is not a directory. Remove it and try again.${NC}"
+    else
+    	  if [ -e $vdirpath ]; then
+            source $vdirpath/bin/activate
+            vhelper_echo "$success_msg"
+        else
+    	      cd $vdir
+    	      virtualenv $this_name
+            cd $last_dir
+            source $vdirpath/bin/activate
+            vhelper_echo "$success_msg"
+    	  fi
+    fi
+}
+
+vhelper_remove() {
+    if [ "$#" -eq 1 ]; then
+	      this_name="$1"
+    else
+        this_name="${PWD##*/}"
+    fi
+
+    vdirpath="$vdir/$this_name"
+    success_msg=
+    if [ -e $vdirpath ]; then
+        rm -rf $vdirpath
+        vhelper_echo "${B}Success. virtualenv '$this_name' removed. Happy Coding.${NC}"
+    else
+        vhelper_echo "${R}Failed. virtualenv '$this_name' was not found. Remove manually from '$vdir' directory.${NC}"
+    fi
+}
+
+vhelper_activate() {
+    if [ "$#" -eq 1 ]; then
+	      this_name="$1"
+    else
+        this_name="${PWD##*/}"
+    fi
+
+    vdirpath="$vdir/$this_name"
+    if [ -e $vdirpath ]; then
+	      deactivate >/dev/null 2>&1
+	      source $vdirpath/bin/activate
+	      vhelper_echo "${B}Activated virtualenv '$this_name' for you. Happy Coding.${NC}"
+    else
+	      vhelper_echo "${R}Failed. virtualenv '$this_name' was not found. Create one with command 'vhelper_create'.${NC}"
+    fi
+}
+
+
+vhelper_goto_env() {
+    if [ "$#" -eq 1 ]; then
+	      this_name="$1"
+        create_cmd="vhelper_create $1"
+    else
+        this_name="${PWD##*/}"
+        create_cmd="vhelper_create"
+    fi
+
+    vdirpath="$vdir/$this_name"
+    if [ -e $vdirpath ]; then
+        cd $vdirpath
+	      vhelper_echo "${B}Success. Changed directory to virtualenv '$this_name'. Happy Coding.${NC}"
+    else
+	      vhelper_echo "${R}Failed. virtualenv '$this_name' was not found. Create one with command '$create_cmd'.${NC}"
+    fi
+}
+
+cd_vhelper() {
+    cd "$@"
+    this_name="${PWD##*/}"
+    if [ -e $vdir/$this_name ]; then
+	      deactivate >/dev/null 2>&1
+	      source $vdir/$this_name/bin/activate
+	      vhelper_echo "${B}Activated virtualenv '$this_name' for you. Happy Coding.${NC}"
+    fi
+}
+alias cd="cd_vhelper"
