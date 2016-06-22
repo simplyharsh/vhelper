@@ -24,7 +24,7 @@ vhelper_echo() {
 vhelper_create() {
     last_dir="${PWD}"
     if [ "$#" -eq 1 ]; then
-	      this_name="$1"
+        this_name="$1"
     else
         this_name="${PWD##*/}"
     fi
@@ -32,31 +32,31 @@ vhelper_create() {
     vdirpath="$vdir/$this_name"
     success_msg="${B}Success. virtualenv '$this_name' created and activated for you. Happy Coding.${NC}"
     if [ ! -e $vdir ]; then
-    	  mkdir $vdir
-    	  cd $vdir
-    	  virtualenv $this_name
+        mkdir $vdir
+        cd $vdir
+        virtualenv $this_name
         cd $last_dir
         source $vdirpath/bin/activate
         vhelper_echo "$success_msg"
     elif [ ! -d $vdir ]; then
-    	  vhelper_echo "${R}Failed. $vdir already exists but is not a directory. Remove it and try again.${NC}"
+        vhelper_echo "${R}Failed. $vdir already exists but is not a directory. Remove it and try again.${NC}"
     else
-    	  if [ -e $vdirpath ]; then
+        if [ -e $vdirpath ]; then
             source $vdirpath/bin/activate
             vhelper_echo "$success_msg"
         else
-    	      cd $vdir
-    	      virtualenv $this_name
+            cd $vdir
+            virtualenv $this_name
             cd $last_dir
             source $vdirpath/bin/activate
             vhelper_echo "$success_msg"
-    	  fi
+        fi
     fi
 }
 
 vhelper_remove() {
     if [ "$#" -eq 1 ]; then
-	      this_name="$1"
+        this_name="$1"
     else
         this_name="${PWD##*/}"
     fi
@@ -73,25 +73,25 @@ vhelper_remove() {
 
 vhelper_activate() {
     if [ "$#" -eq 1 ]; then
-	      this_name="$1"
+        this_name="$1"
     else
         this_name="${PWD##*/}"
     fi
 
     vdirpath="$vdir/$this_name"
     if [ -e $vdirpath ]; then
-	      deactivate >/dev/null 2>&1
-	      source $vdirpath/bin/activate
-	      vhelper_echo "${B}Activated virtualenv '$this_name' for you. Happy Coding.${NC}"
+        deactivate >/dev/null 2>&1
+        source $vdirpath/bin/activate
+        vhelper_echo "${B}Activated virtualenv '$this_name' for you. Happy Coding.${NC}"
     else
-	      vhelper_echo "${R}Failed. virtualenv '$this_name' was not found. Create one with command 'vhelper_create'.${NC}"
+        vhelper_echo "${R}Failed. virtualenv '$this_name' was not found. Create one with command 'vhelper_create'.${NC}"
     fi
 }
 
 
 vhelper_goto_env() {
     if [ "$#" -eq 1 ]; then
-	      this_name="$1"
+        this_name="$1"
         create_cmd="vhelper_create $1"
     else
         this_name="${PWD##*/}"
@@ -101,9 +101,9 @@ vhelper_goto_env() {
     vdirpath="$vdir/$this_name"
     if [ -e $vdirpath ]; then
         cd $vdirpath
-	      vhelper_echo "${B}Success. Changed directory to virtualenv '$this_name'. Happy Coding.${NC}"
+        vhelper_echo "${B}Success. Changed directory to virtualenv '$this_name'. Happy Coding.${NC}"
     else
-	      vhelper_echo "${R}Failed. virtualenv '$this_name' was not found. Create one with command '$create_cmd'.${NC}"
+        vhelper_echo "${R}Failed. virtualenv '$this_name' was not found. Create one with command '$create_cmd'.${NC}"
     fi
 }
 
@@ -111,9 +111,9 @@ cd_vhelper() {
     cd "$@"
     this_name="${PWD##*/}"
     if [ -e $vdir/$this_name ]; then
-	      deactivate >/dev/null 2>&1
-	      source $vdir/$this_name/bin/activate
-	      vhelper_echo "${B}Activated virtualenv '$this_name' for you. Happy Coding.${NC}"
+        deactivate >/dev/null 2>&1
+        source $vdir/$this_name/bin/activate
+        vhelper_echo "${B}Activated virtualenv '$this_name' for you. Happy Coding.${NC}"
     fi
 }
 alias cd="cd_vhelper"
