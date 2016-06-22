@@ -59,6 +59,7 @@ vhelper_remove() {
         this_name="$1"
     else
         this_name="${PWD##*/}"
+        deactivate >/dev/null 2>&1
     fi
 
     vdirpath="$vdir/$this_name"
