@@ -1,7 +1,11 @@
 # vhelper
 A helper script to deal with python virtualenv
 
-### Installation
+### Pre-requisite
+`python-virtualenv`
+Script assumes that you already have a stable release of python-virtualenv installed. This script is just a helper, remember.
+
+### Setup
 
 1. Copy/move file `vhelper` into your home folder as `.vhelper`
 2. Add to your .bashrc or .bash-profile
