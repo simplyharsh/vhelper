@@ -108,19 +108,6 @@ vhelper_goto_env() {
     fi
 }
 
-function vhelper_set_title() {
-    if [[ -z "$ORIG" ]]; then
-        ORIG=$PS1
-    fi
-    TITLE="\[\e]2;$*\a\]"
-    venv_name="$(basename "$VIRTUAL_ENV")"
-    if [[ ! -z "$venv_name" ]]; then
-        PS1=($venv_name)${ORIG}${TITLE}
-    else
-        PS1=${ORIG}${TITLE}
-    fi
-}
-
 cd_vhelper() {
     cd "$@"
     this_name="${PWD##*/}"
@@ -132,6 +119,5 @@ cd_vhelper() {
             vhelper_echo "${B}Activated virtualenv '$this_name' for you. Happy Coding.${NC}"
         fi
     fi
-    vhelper_set_title $this_name
 }
 alias cd="cd_vhelper"
